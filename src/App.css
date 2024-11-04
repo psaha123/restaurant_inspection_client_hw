@@ -43,10 +43,29 @@
   color: #888;
 }
 
-/* New CSS for the white blocks (inspection results) */
+#search label {
+  font-size: 1.25rem; 
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+#search input[type="text"] {
+  font-size: 1.25rem; 
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 300px;
+  max-width: 100%;
+}
+
+#search input[type="text"]::placeholder {
+  color: #888;
+}
+
 #results .inspection {
-  background-color: white; /* Ensures background is white */
-  color: black; /* Sets text color to black for readability */
+  background-color: white;
+  color: black;
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 8px;
@@ -55,11 +74,10 @@
 }
 
 #results .inspection h4 {
-  color: black; /* Ensures the heading is black */
+  color: black;
 }
 
 #results .inspection p {
-  color: black; /* Ensures all paragraph text is black */
+  color: black;
   margin: 0.5rem 0;
 }
-
