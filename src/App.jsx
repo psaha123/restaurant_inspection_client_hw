@@ -6,16 +6,14 @@ function App() {
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const searchTimeout = useRef(null); // Ref to hold timeout ID for debounce
+  const searchTimeout = useRef(null); 
 
-  // Function to handle input changes with debounce
   const handleInputChange = (event) => {
     const name = event.target.value;
     setRestaurantName(name);
 
     clearTimeout(searchTimeout.current);
     if (name.trim()) {
-      // Set a debounce to delay the API call
       searchTimeout.current = setTimeout(() => {
         fetchRestaurantData(name.trim());
       }, 500);
@@ -25,7 +23,6 @@ function App() {
     }
   };
 
-  // Function to fetch restaurant data
   const fetchRestaurantData = async (name) => {
     setIsLoading(true);
     setError('');
@@ -51,7 +48,6 @@ function App() {
     setIsLoading(false);
   };
 
-  // Cleanup timeout on component unmount
   useEffect(() => {
     return () => clearTimeout(searchTimeout.current);
   }, []);
@@ -66,7 +62,7 @@ function App() {
           id="restaurantName"
           value={restaurantName}
           onChange={handleInputChange}
-          placeholder="Enter a restaurant name"
+          placeholder="Enter a Restaurant Name"
         />
       </div>
       
