@@ -1,7 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App'; 
-import './index.css';
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
   const [restaurantName, setRestaurantName] = useState('');
