@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -6,14 +6,14 @@ function App() {
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  let searchTimeout;
+  const searchTimeout = useRef(null); // Use useRef to persist the timeout ID
 
   const handleInputChange = (event) => {
     setRestaurantName(event.target.value);
 
     // Debounce API call to reduce unnecessary requests
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
+    clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
       if (event.target.value.trim()) {
         fetchRestaurantData(event.target.value.trim());
       } else {
@@ -48,7 +48,7 @@ function App() {
   };
 
   useEffect(() => {
-    return () => clearTimeout(searchTimeout); // Clear timeout on component unmount to prevent memory leaks
+    return () => clearTimeout(searchTimeout.current); // Clear timeout on component unmount to prevent memory leaks
   }, []);
 
   return (
