@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import './App.css';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App'; 
+import './index.css';
 
 function App() {
   const [restaurantName, setRestaurantName] = useState('');
@@ -40,11 +42,16 @@ function App() {
         setError('No results found.');
       }
     } catch (error) {
+      setResults([]);
       setError('Error fetching results.');
       console.error('Error:', error);
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    return () => clearTimeout(searchTimeout); // Clear timeout on component unmount to prevent memory leaks
+  }, []);
 
   return (
     <div className="app">
@@ -62,7 +69,7 @@ function App() {
       
       {isLoading && <p>Loading...</p>}
       
-      {error && <p>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
       <div id="results">
         {results.map((inspection, index) => (
