@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -6,49 +6,54 @@ function App() {
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  let searchTimeout;
+  const searchTimeout = useRef(null); // Ref to hold timeout ID for debounce
 
+  // Function to handle input changes with debounce
   const handleInputChange = (event) => {
-    setRestaurantName(event.target.value);
+    const name = event.target.value;
+    setRestaurantName(name);
 
-    // Debounce API call to reduce unnecessary requests
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      if (event.target.value.trim()) {
-        fetchRestaurantData(event.target.value.trim());
-      } else {
-        setResults([]);
-        setError('');
-      }
-    }, 500); // Wait 500ms before sending the API request
+    clearTimeout(searchTimeout.current);
+    if (name.trim()) {
+      // Set a debounce to delay the API call
+      searchTimeout.current = setTimeout(() => {
+        fetchRestaurantData(name.trim());
+      }, 500);
+    } else {
+      setResults([]);
+      setError('');
+    }
   };
 
+  // Function to fetch restaurant data
   const fetchRestaurantData = async (name) => {
     setIsLoading(true);
     setError('');
+    setResults([]);
+    
     try {
       const response = await fetch(`https://restaurant-inspection-api-40554916dc60.herokuapp.com/search?restaurant_name=${encodeURIComponent(name)}`);
       
       if (!response.ok) throw new Error('Network response was not ok');
 
-      const data = await response.json();
+      const jsonResponse = await response.json();
+      const { data } = jsonResponse;
 
       if (data && data.length > 0) {
         setResults(data);
       } else {
-        setResults([]);
         setError('No results found.');
       }
     } catch (error) {
-      setResults([]);
       setError('Error fetching results.');
       console.error('Error:', error);
     }
     setIsLoading(false);
   };
 
+  // Cleanup timeout on component unmount
   useEffect(() => {
-    return () => clearTimeout(searchTimeout); // Clear timeout on component unmount to prevent memory leaks
+    return () => clearTimeout(searchTimeout.current);
   }, []);
 
   return (
